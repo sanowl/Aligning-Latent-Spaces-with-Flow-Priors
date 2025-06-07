@@ -1,13 +1,13 @@
 """Stripped version of https://github.com/richzhang/PerceptualSimilarity/tree/master/models"""
 
 import os, hashlib
-import requests
 from tqdm import tqdm
 
 import torch
 import torch.nn as nn
 from torchvision import models
 from collections import namedtuple
+from security import safe_requests
 
 URL_MAP = {
     "vgg_lpips": "https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b/?dl=1"
@@ -23,7 +23,7 @@ MD5_MAP = {
 
 def download(url, local_path, chunk_size=1024):
     os.makedirs(os.path.split(local_path)[0], exist_ok=True)
-    with requests.get(url, stream=True) as r:
+    with safe_requests.get(url, stream=True) as r:
         total_size = int(r.headers.get("content-length", 0))
         with tqdm(total=total_size, unit="B", unit_scale=True) as pbar:
             with open(local_path, "wb") as f:
