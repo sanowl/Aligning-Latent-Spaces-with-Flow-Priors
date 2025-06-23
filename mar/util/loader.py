@@ -9,6 +9,7 @@ import torch
 from torch.utils.data import Dataset
 import torchvision.datasets as datasets
 from torchvision.datasets.folder import default_loader
+import fickling
 
 
 class ImageFolderWithFilename(datasets.ImageFolder):
@@ -287,7 +288,7 @@ class LMDBImageDataset(Dataset):
         
         # Load keys for accessing images
         with open(keys_path, 'rb') as f:
-            self.keys = pickle.load(f)
+            self.keys = fickling.load(f)
         
         # Open LMDB file with subdir=False since it is directly a file
         self.env = lmdb.open(lmdb_path, readonly=True, lock=False, readahead=False, meminit=False, subdir=False)
