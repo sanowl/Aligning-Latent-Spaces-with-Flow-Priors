@@ -9,7 +9,7 @@ def build_tokenizer(vq_config,
                     vq_ckpt=None):
     
     with open(vq_config, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+        config = yaml.load(f, Loader=yaml.SafeLoader)
     
     config_name = vq_config.split('/')[-2]
     
