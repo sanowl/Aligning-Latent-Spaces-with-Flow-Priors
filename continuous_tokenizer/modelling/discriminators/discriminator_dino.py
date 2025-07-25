@@ -1,6 +1,5 @@
 import math
 import os.path
-import random
 from typing import List, Tuple
 
 from typing import Any
@@ -15,6 +14,7 @@ from torchvision.transforms import RandomCrop
 
 
 import modelling.discriminators.dist as dist
+import secrets
 
 try:
     from flash_attn.ops.layer_norm import dropout_add_layer_norm
@@ -378,7 +378,7 @@ class FrozenDINOSmallNoDrop(nn.Module):
         with torch.cuda.amp.autocast(enabled=False):
             x = (self.x_scale * x.float()).add_(self.x_shift)
             H, W = x.shape[-2], x.shape[-1]
-            if H > self.img_size and W > self.img_size and random.random() <= 0.5:
+            if H > self.img_size and W > self.img_size and secrets.SystemRandom().random() <= 0.5:
                 x = self.crop(x)
             else:
                 x = F.interpolate(x, size=(self.img_size, self.img_size),
@@ -414,7 +414,7 @@ class FrozenDINOSmallNoDrop(nn.Module):
 if __name__ == '__main__':
     torch.manual_seed(0)
     np.random.seed(0)
-    random.seed(0)
+    secrets.SystemRandom().seed(0)
     ks = 9
     norm_type = 'sbn'
     norm_eps = 1e-6

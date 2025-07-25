@@ -3,13 +3,13 @@ from PIL import Image
 import os
 
 import math
-import random
 import torch
 import torch.nn.functional as F
 import torchvision.datasets as datasets
 import lmdb
 import pickle
 import io
+import secrets
 
 def center_crop_arr(pil_image, image_size):
     """
@@ -35,7 +35,7 @@ def center_crop_arr(pil_image, image_size):
 def random_crop_arr(pil_image, image_size, min_crop_frac=0.8, max_crop_frac=1.0):
     min_smaller_dim_size = math.ceil(image_size / max_crop_frac)
     max_smaller_dim_size = math.ceil(image_size / min_crop_frac)
-    smaller_dim_size = random.randrange(min_smaller_dim_size, max_smaller_dim_size + 1)
+    smaller_dim_size = secrets.SystemRandom().randrange(min_smaller_dim_size, max_smaller_dim_size + 1)
 
     # We are not on a new enough PIL to support the `reducing_gap`
     # argument, which uses BOX downsampling at powers of two first.
@@ -51,8 +51,8 @@ def random_crop_arr(pil_image, image_size, min_crop_frac=0.8, max_crop_frac=1.0)
     )
 
     arr = np.array(pil_image)
-    crop_y = random.randrange(arr.shape[0] - image_size + 1)
-    crop_x = random.randrange(arr.shape[1] - image_size + 1)
+    crop_y = secrets.SystemRandom().randrange(arr.shape[0] - image_size + 1)
+    crop_x = secrets.SystemRandom().randrange(arr.shape[1] - image_size + 1)
     return Image.fromarray(arr[crop_y : crop_y + image_size, crop_x : crop_x + image_size])
 
 
